@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AppController (e2e) /blog/posts (GET) Blog posts 1`] = `
+{
+  "posts": [
+    {
+      "createdAt": "[REDACTED]",
+      "createdBy": "some-userid",
+      "description": "This is a test post",
+      "id": "[REDACTED]",
+      "likes": 0,
+      "title": "Test Post",
+      "updatedAt": "[REDACTED]",
+    },
+  ],
+}
+`;
+
+exports[`AppController (e2e) /blog/posts (POST) Create a blog post 1`] = `
+{
+  "createdAt": "[REDACTED]",
+  "createdBy": "some-userid",
+  "description": "This is a test post",
+  "id": "[REDACTED]",
+  "likes": 0,
+  "title": "Test Post",
+  "updatedAt": "[REDACTED]",
+}
+`;
+
+exports[`AppController (e2e) /blog/posts/:id/like (PATCH) Like a blog post 1`] = `
+{
+  "createdAt": "[REDACTED]",
+  "createdBy": "some-userid",
+  "description": "This is a test post",
+  "id": "[REDACTED]",
+  "likes": 1,
+  "title": "Test Post",
+  "updatedAt": "[REDACTED]",
+}
+`;

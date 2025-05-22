@@ -1,25 +1,49 @@
 import { Injectable } from '@nestjs/common';
-import { IPost } from '../interface/post.interface';
-import { BlogPostgresRepository } from '../repository/blog-repository-postgres/blog.postgres.repository';
+import { IPost, IPostCreate } from '../interface/post.interface';
+import { BlogRepositorySqlite } from '../repository/blog-repository-memory/blog-repository-sqlite.repository';
+import { BlogPostNotFoundError } from '../errors/blog-post-errors';
 
 @Injectable()
 export class BlogService {
-  constructor(private readonly repository: BlogPostgresRepository) {}
+  constructor(private readonly repository: BlogRepositorySqlite) {}
 
   async getPosts(): Promise<IPost[]> {
-    const posts: IPost[] = await this.repository.getPosts();
+    //TODO Input validation
+    const posts = await this.repository.getPosts();
+    if (!posts) {
+      //TODO: type error handling (404, 500)
+      throw new Error('No posts found');
+    }
     return posts;
   }
 
-  async createPosts(post: Omit<IPost, 'id'>): Promise<IPost> {
+  async createPost(post: IPostCreate, createdBy: string): Promise<IPost> {
     // TODO: Input validation
-    const createdPost: IPost = await this.repository.createPost(post);
+    const createdPost = await this.repository.createPost(post, createdBy);
+    //TODO: type error handling (422, 500)
+    if (!createdPost) {
+      throw new Error('Post not created');
+    }
     return createdPost;
   }
 
-  async likePost(postId: string, userId: string): Promise<IPost> {
+  async likePost(postId: string): Promise<IPost> {
+    console.log(postId);
     // TODO: Input validation
-    const likedPost: IPost = await this.repository.likePosts(postId, userId);
+    const post = await this.repository.getPostById(postId);
+    console.log(post);
+    if (!post) {
+      throw new BlogPostNotFoundError(postId);
+    }
+
+    //TODO: make sure user only likes once
+    post.likes += 1;
+    const likedPost = await this.repository.savePost(post);
+
+    if (!likedPost) {
+      //TODO: type error handling (422, 500)
+      throw new Error('Post not saved');
+    }
     return likedPost;
   }
 }
