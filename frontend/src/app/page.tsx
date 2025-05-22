@@ -1,19 +1,16 @@
 'use client'
 
-import Link from "next/link";
+import Header from "@/components/misc/Header";
+import BlogPage from "./blog/page";
+import withAuth from "@/wrapper/withAuth";
 
-function Main() {
-  const haneldLogout = () => {
-    localStorage.removeItem("authString");
-    window.location.href = "/login";
-  };
+function Main() { 
   return (
     <div >
-      <Link href="/todo">Go to do page</Link>      
-      <button className="bg-blue-500" onClick={haneldLogout}>Logout</button>
-
+      <Header />
+      <BlogPage/>
     </div>
   );
 }
 
-export default Main;
+export default withAuth(Main);

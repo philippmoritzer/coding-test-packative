@@ -13,7 +13,10 @@
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.6.0"
+    "react-router-dom": "^7.6.0",
+    "@nestjs/typeorm": "^11.0.0",
+    "sqlite3": "^5.1.7",
+    "typeorm": "^0.3.24"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
