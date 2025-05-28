@@ -1,0 +1,9 @@
+{
+  "error": {
+    "badRequest": "Ungültige Anfrage.",
+    "unauthorized": "Sie sind nicht autorisiert.",
+    "forbidden": "Zugriff verweigert.",
+    "notFound": "Nicht gefunden.",
+    "server": "Serverfehler."
+  }
+}

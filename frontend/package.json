@@ -10,10 +10,21 @@
     "test": "jest"
   },
   "dependencies": {
+    "@nestjs/typeorm": "^11.0.0",
+    "@next/env": "^15.3.2",
+    "@reduxjs/toolkit": "^2.8.2",
+    "axios": "^1.9.0",
+    "fs": "^0.0.1-security",
+    "i18next": "^25.2.1",
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.6.0"
+    "react-i18next": "^15.5.2",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.6.0",
+    "redux-persist": "^6.0.0",
+    "sqlite3": "^5.1.7",
+    "typeorm": "^0.3.24"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

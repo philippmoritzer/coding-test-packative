@@ -1,19 +1,16 @@
 'use client'
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import withAuth from "@/shared/components/withAuth";
+import { useEffect } from "react";
 
-function Main() {
-  const haneldLogout = () => {
-    localStorage.removeItem("authString");
-    window.location.href = "/login";
-  };
-  return (
-    <div >
-      <Link href="/todo">Go to do page</Link>      
-      <button className="bg-blue-500" onClick={haneldLogout}>Logout</button>
+function Main() { 
+  const router = useRouter();
 
-    </div>
-  );
+  useEffect(() => {
+    router.replace('/blog')
+  }, [router]);
+  return null;
 }
 
-export default Main;
+export default withAuth(Main);

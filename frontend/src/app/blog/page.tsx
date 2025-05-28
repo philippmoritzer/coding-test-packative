@@ -1,46 +1,55 @@
-'use client'
+'use client';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import BlogPostCard from "@/app/blog/components/BlogPostCard";
+import CreatePostForm from "./components/CreatePostForm";
+import { useFetchBlogPosts } from "./hooks/fetchBlogPosts";
+import { usePaginationParams } from "./hooks/usePaginationParams";
+import { BlogPost } from "./types/blogPost.type";
+import PaginationNav from "./components/PaginationNav";
+import withAuth from "@/shared/components/withAuth";
+import '@/i18n'
 
-function BlogPage() {
+const PAGE_SIZE = 10;
 
-    const [blogPosts, setBlogPosts] = useState([]);
+function BlogPageContent({ page, setPage }: { page: number; setPage: (p: number) => void }) {
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [total, setTotal] = useState(0);
 
-    useEffect(() => {
-        
-        async function fetchBlogPosts() {
-        
-        const res = await fetch('http://localhost:3001/blog/posts', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'some-jwt-token'
-            }
-        })
+  useFetchBlogPosts(setBlogPosts, setTotal, page, PAGE_SIZE);
 
-        if(!res.ok) {
-            throw new Error('Failed to fetch blog posts');
-        }
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
-        const data = await res.json();
-        setBlogPosts(data.posts)
-        }
+  const handlePostCreated = (newPost: BlogPost) => {
+    setBlogPosts((prevPosts) => [newPost, ...prevPosts]);
+    setTotal((prevTotal) => prevTotal + 1);
+  };
 
-        fetchBlogPosts()
-    }, [])
-
-    return <div className="text-center">
-        <h1 className="text-2xl font-bold">Blog Posts</h1>
-        <div className="mt-4">
-            {blogPosts.map((post: any) => (
-                <div key={post.id} className="border p-4 mb-4">
-                    <h2 className="text-xl font-semibold">{post.title}</h2>
-                    <p>{post.content}</p>
-                </div>
-            ))}
-        </div>
+  return (
+    <div className="container mx-auto px-4">
+      <CreatePostForm onPostCreated={handlePostCreated} />
+      <PaginationNav
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
+      <div className="space-y-6">
+        {blogPosts.map((post: BlogPost) => (
+          <BlogPostCard key={post.id} blogPost={post} />
+        ))}
+      </div>
+      <PaginationNav
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </div>
+  );
 }
 
-export default BlogPage;
+function BlogPage() {
+  const { page, setPage } = usePaginationParams(1);
+  return <BlogPageContent page={page} setPage={setPage} />;
+}
+
+export default withAuth(BlogPage);
