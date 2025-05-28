@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen,  } from "@testing-library/react";
-import LikeButton from "../BlogPost/LikeButton";
 import "@testing-library/jest-dom";
+import LikeButton from "../LikeButton";
 
 global.fetch = jest.fn();
 
