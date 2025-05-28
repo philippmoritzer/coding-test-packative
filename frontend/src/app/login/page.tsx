@@ -1,37 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-
-const validUsers = [
-  { username: "admin", password: "admin" },
-  { username: "john", password: "doe" },
-];
+import { useState } from "react";
+import { useLogin } from "./hooks/handleLogin";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const router = useRouter();
+  const { handleLogin, error, setError } = useLogin();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const user = validUsers.find(
-      (u) => u.username === username && u.password === password
-    );
-
-    if (user) {      
-      localStorage.setItem("authUser", username);      
-      localStorage.setItem(
-        "authString",
-        user.username === 'admin'
-          ? "userId:some-userid;permissions:create:blog-post;"
-          : "userId:some-userid;permissions:view:blog-post;"
-      );
-      router.push("/");
-    } else {
-      setError("Invalid username or password. Please try again.");
-    }
+    setError(""); // Clear previous error before attempting login
+    handleLogin(username, password);
   };
 
   return (
@@ -43,7 +23,7 @@ export default function LoginPage() {
         {error && (
           <div className="mb-4 text-red-500 text-sm text-center">{error}</div>
         )}
-        <form onSubmit={handleLogin}>
+        <form onSubmit={onSubmit}>
           <div className="mb-4">
             <label
               htmlFor="username"
@@ -55,7 +35,10 @@ export default function LoginPage() {
               type="text"
               id="username"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                setError(""); 
+              }}
               className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-black"
               placeholder="Enter your username"
             />
@@ -71,7 +54,10 @@ export default function LoginPage() {
               type="password"
               id="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError(""); 
+              }}
               className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-black"
               placeholder="Enter your password"
             />

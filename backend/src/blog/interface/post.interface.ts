@@ -1,12 +1,12 @@
 export interface IPostCreate {
   title: string;
-  description: string;
+  content: string;
 }
 
 export interface IPost {
   id: string;
   title: string;
-  description: string;
+  content: string;
   createdBy: string;
   likes: number;
   createdAt: Date;

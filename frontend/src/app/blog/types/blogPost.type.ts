@@ -1,13 +1,13 @@
-export interface BlogPost {
+export type BlogPost = {
   id: string;
   title: string;
-  description: string;
+  content: string;
   createdBy: string;
   likes: number;
   createdAt: string;
   updatedAt: string;
-}
+};
 
-export interface BlogPostCardProps {
+export type BlogPostCardProps = {
   blogPost: BlogPost;
-}
+};

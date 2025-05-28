@@ -7,14 +7,36 @@ import { BlogPostNotFoundError } from '../errors/blog-post-errors';
 export class BlogService {
   constructor(private readonly repository: BlogRepositorySqlite) {}
 
-  async getPosts(): Promise<IPost[]> {
-    //TODO Input validation
-    const posts = await this.repository.getPosts();
+  async getPosts(filter?: {
+    skip?: number;
+    take?: number;
+    order?: string;
+  }): Promise<{ posts: IPost[]; total: number }> {
+    const order = filter?.order?.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+    const skip = filter?.skip ?? 0;
+    const take = filter?.take ?? 10;
+
+    const [posts, total] = await Promise.all([
+      this.repository.getPosts({
+        order: { createdAt: order },
+        skip,
+        take,
+      }),
+      this.repository.countPosts(),
+    ]);
     if (!posts) {
-      //TODO: type error handling (404, 500)
       throw new Error('No posts found');
     }
-    return posts;
+    return { posts, total };
+  }
+
+  async getPostByid(id: string): Promise<IPost> {
+    // TODO: Input validation
+    const post = await this.repository.getPostById(id);
+    if (!post) {
+      throw new BlogPostNotFoundError(id);
+    }
+    return post;
   }
 
   async createPost(post: IPostCreate, createdBy: string): Promise<IPost> {
@@ -28,10 +50,8 @@ export class BlogService {
   }
 
   async likePost(postId: string): Promise<IPost> {
-    console.log(postId);
     // TODO: Input validation
     const post = await this.repository.getPostById(postId);
-    console.log(post);
     if (!post) {
       throw new BlogPostNotFoundError(postId);
     }

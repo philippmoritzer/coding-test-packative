@@ -1,0 +1,9 @@
+{
+  "error": {
+    "badRequest": "Bad request.",
+    "unauthorized": "You are not authorized.",
+    "forbidden": "Access forbidden.",
+    "notFound": "Not found.",
+    "server": "Server error."
+  }
+}

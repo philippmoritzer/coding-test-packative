@@ -1,16 +1,16 @@
 'use client'
 
-import Header from "@/components/misc/Header";
-import BlogPage from "./blog/page";
-import withAuth from "@/wrapper/withAuth";
+import { useRouter } from "next/navigation";
+import withAuth from "@/shared/components/withAuth";
+import { useEffect } from "react";
 
 function Main() { 
-  return (
-    <div >
-      <Header />
-      <BlogPage/>
-    </div>
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/blog')
+  }, [router]);
+  return null;
 }
 
 export default withAuth(Main);

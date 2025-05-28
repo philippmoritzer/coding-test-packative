@@ -8,7 +8,7 @@ export class BlogPostOutputDTO {
   title: string;
 
   @ApiProperty({ description: 'Content of the blog post' })
-  description: string;
+  content: string;
 
   @ApiProperty({ description: 'The user id the post was created by' })
   createdBy: string;
@@ -26,4 +26,7 @@ export class BlogPostOutputDTO {
 export class BlogPostsListOutputDTO {
   @ApiProperty({ type: [BlogPostOutputDTO] })
   posts: BlogPostOutputDTO[];
+
+  @ApiProperty({ description: 'Total number of blog posts' })
+  total: number;
 }

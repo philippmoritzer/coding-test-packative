@@ -8,7 +8,7 @@ import { BlogPost } from '../entity/blog-post.entity';
 
 const mockPostInput: IPostCreate = {
   title: 'Test Post',
-  description: 'This is a test post',
+  content: 'This is a test post',
 };
 
 describe('BlogService', () => {
@@ -40,8 +40,15 @@ describe('BlogService', () => {
 
   it('Happy path getting all posts', async () => {
     const result = await service.getPosts();
-    expect(result).toHaveLength(1);
+    expect(result.posts).toHaveLength(1);
+    expect(result.total).toBe(1);
   });
+
+  it('happy path getting a post by id', async () => {
+    const result = await service.getPostByid(mockDbPost.id);
+    expect(result).toHaveProperty('id', mockDbPost.id);
+  });
+
   it('Happy path liking a post', async () => {
     const result = await service.likePost(mockDbPost.id);
     expect(result.likes).toBe(1);

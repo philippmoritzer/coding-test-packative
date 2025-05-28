@@ -14,8 +14,8 @@ export class BlogPost {
   @Column({ type: 'varchar', length: 255 })
   title: string;
 
-  @Column({ type: 'text' })
-  description: string;
+  @Column({ type: 'text', length: 5000 })
+  content: string;
 
   @Column({ type: 'text' })
   createdBy: string;

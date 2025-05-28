@@ -14,13 +14,13 @@ export class BlogPostInputDTO {
   title: string;
 
   @ApiProperty({
-    description: 'Description of the blog post',
+    description: 'Content of the blog post',
     minLength: 3,
-    maxLength: 255,
+    maxLength: 5000,
   })
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
-  @MaxLength(255)
-  description: string;
+  @MaxLength(5000)
+  content: string;
 }

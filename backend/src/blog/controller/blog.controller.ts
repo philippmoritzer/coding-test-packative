@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
   BadRequestException,
   Body,
@@ -12,6 +10,9 @@ import {
   Post,
   UsePipes,
   ValidationPipe,
+  Query,
+  DefaultValuePipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
   BlogPostOutputDTO,
@@ -20,7 +21,13 @@ import {
 import { BlogService } from '../service/blog.service';
 import { BlogPostInputDTO } from '../dto/blog-post-input.dto';
 import { IPostCreate } from '../interface/post.interface';
-import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Permission } from '../../shared/decorators/permission.decorator';
 import { Auth } from '../../shared/decorators/auth.decorator';
 import { GetUserId } from '../..//shared/decorators/get-user-id.decorator';
@@ -56,13 +63,98 @@ export class BlogController {
     status: 500,
     description: 'Internal Server Error',
   })
+  @ApiQuery({
+    name: 'page',
+    description: 'Page number for pagination',
+    required: false,
+    type: Number,
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'pageSize',
+    description: 'Number of posts per page',
+    required: false,
+    type: Number,
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'order',
+    description: 'Order of posts by creation date',
+    required: false,
+    type: String,
+    example: 'DESC',
+  })
   @Get('posts')
-  async getPosts(): Promise<BlogPostsListOutputDTO> {
-    const serviceRes = await this.blogService.getPosts();
+  async getPosts(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('pageSize', new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
+    @Query('order', new DefaultValuePipe('DESC')) order: string,
+  ): Promise<BlogPostsListOutputDTO> {
+    //TODO: Validate in decorator
+    if (page < 1) {
+      throw new BadRequestException('Page must be >= 1');
+    }
+    if (pageSize < 1 || pageSize > 100) {
+      throw new BadRequestException('pageSize must be between 1 and 100');
+    }
+
+    const normalizedOrder = order.toUpperCase();
+    if (normalizedOrder !== 'ASC' && normalizedOrder !== 'DESC') {
+      throw new BadRequestException("Order must be 'ASC' or 'DESC'");
+    }
+    const skip = (page - 1) * pageSize;
+    const take = pageSize;
+    const filter = { skip, take, order: normalizedOrder };
+    const serviceRes = await this.blogService.getPosts(filter);
     const res: BlogPostsListOutputDTO = {
-      posts: serviceRes,
+      posts: serviceRes.posts,
+      total: serviceRes.total,
     };
     return res;
+  }
+
+  @Get('posts/:id')
+  @ApiParam({
+    name: 'id',
+    description: 'ID of the blog post to retrieve',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Blog post retrieved successfully',
+    type: BlogPostOutputDTO,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Blog post not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+  })
+  async getPostById(
+    @Param('id') blogPostId: string,
+  ): Promise<BlogPostOutputDTO> {
+    if (!isUUID(blogPostId)) {
+      throw new BadRequestException('Invalid blog post ID');
+    }
+    try {
+      return await this.blogService.getPostByid(blogPostId);
+    } catch (error: any) {
+      if (error.name === 'BlogPostNotFoundError') {
+        throw new NotFoundException('Post not found');
+      }
+      throw new InternalServerErrorException(
+        'An error occurred while retrieving the post',
+      );
+    }
   }
 
   @ApiBody({
@@ -96,10 +188,10 @@ export class BlogController {
     @Body() blogPostInputDTO: BlogPostInputDTO,
     @GetUserId() userId: string,
   ): Promise<BlogPostOutputDTO> {
-    const { title, description } = blogPostInputDTO;
+    const { title, content: description } = blogPostInputDTO;
     const inputPost: IPostCreate = {
       title,
-      description,
+      content: description,
     };
     return this.blogService.createPost(inputPost, userId);
   }
@@ -140,7 +232,7 @@ export class BlogController {
       const blogPostOut: BlogPostOutputDTO = {
         id: post.id,
         title: post.title,
-        description: post.description,
+        content: post.content,
         createdBy: post.createdBy,
         likes: post.likes,
         createdAt: post.createdAt,

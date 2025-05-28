@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
@@ -10,7 +7,7 @@ import { redactDynamicFields } from './test.helper';
 import { BlogPostOutputDTO } from 'src/blog/dto/blog-post-output.dto';
 import { randomUUID } from 'crypto';
 
-describe('AppController (e2e)', () => {
+describe('BlogController (e2e)', () => {
   let app: INestApplication<App>;
   let mockPost: BlogPostOutputDTO;
 
@@ -22,17 +19,16 @@ describe('AppController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
 
-    //Create a mock post
     mockPost = (
       await request(app.getHttpServer())
         .post('/blog/posts')
         .set('Authorization', 'userId:some-userid;permissions:create:blog-post')
         .send({
           title: 'Test Post',
-          description: 'This is a test post',
+          content: 'This is a test post',
         })
         .expect(201)
-    ).body;
+    ).body as BlogPostOutputDTO;
   });
 
   afterAll(async () => {
@@ -40,17 +36,25 @@ describe('AppController (e2e)', () => {
   });
 
   it('/blog/posts (GET) Blog posts', async () => {
-    const res = await request(app.getHttpServer())
+    await request(app.getHttpServer())
       .get('/blog/posts')
       .set('Authorization', 'userId:some-userid')
       .expect(200)
       .expect((res) => {
-        console.log(res.body);
         expect(res.body.posts).toBeInstanceOf(Array);
         expect(res.body.posts.length).toBeGreaterThanOrEqual(0);
       });
+  });
 
-    expect(redactDynamicFields(res.body)).toMatchSnapshot();
+  it('/blog/posts (GET) Blog posts paginated', async () => {
+    await request(app.getHttpServer())
+      .get('/blog/posts?page=2&pageSize=10')
+      .set('Authorization', 'userId:some-userid')
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.posts).toBeInstanceOf(Array);
+        expect(res.body.posts.length).toEqual(10);
+      });
   });
 
   it('/blog/posts (GET) 401 on get posts', async () => {
@@ -72,13 +76,13 @@ describe('AppController (e2e)', () => {
       .set('Authorization', 'userId:some-userid;permissions:create:blog-post')
       .send({
         title: 'Test Post',
-        description: 'This is a test post',
+        content: 'This is a test post',
       })
       .expect(201)
       .expect((res) => {
         expect(res.body).toHaveProperty('id');
         expect(res.body.title).toBe('Test Post');
-        expect(res.body.description).toBe('This is a test post');
+        expect(res.body.content).toBe('This is a test post');
       });
 
     expect(redactDynamicFields(res.body)).toMatchSnapshot();
@@ -90,7 +94,7 @@ describe('AppController (e2e)', () => {
       .set('Authorization', 'userId:some-userid;permissions:read:blog-post')
       .send({
         title: 'Test Post',
-        description: 'This is a test post',
+        content: 'This is a test post',
       })
       .expect(403)
       .expect((res) => {
@@ -99,6 +103,30 @@ describe('AppController (e2e)', () => {
           'message',
           'User does not have the required permissions',
         );
+      });
+  });
+
+  it('/blog/posts/:id (GET) Get a blog post by id', async () => {
+    const res = await request(app.getHttpServer())
+      .get(`/blog/posts/${mockPost.id}`)
+      .set('Authorization', 'userId:some-userid;')
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toHaveProperty('id', mockPost.id);
+        expect(res.body).toHaveProperty('title', mockPost.title);
+        expect(res.body).toHaveProperty('content', mockPost.content);
+      });
+    expect(redactDynamicFields(res.body)).toMatchSnapshot();
+  });
+
+  it('/blog/posts/:id (GET) should throw 404 for non-existing post', async () => {
+    await request(app.getHttpServer())
+      .get(`/blog/posts/${randomUUID().toString()}`)
+      .set('Authorization', 'userId:some-userid;')
+      .expect(404)
+      .expect((res) => {
+        expect(res.body).toHaveProperty('statusCode', 404);
+        expect(res.body).toHaveProperty('message', 'Post not found');
       });
   });
 

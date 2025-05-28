@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import LikeButton from "./LikeButton";
-import { BlogPostCardProps } from "@/interfaces/blog-post.interface";
+import LikeButton from "@/app/blog/components/LikeButton";
+import { BlogPostCardProps } from "@/app/blog/types/blogPost.type";
+import Link from "next/link";
 
 
 
@@ -13,13 +14,16 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ blogPost }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+      
+    <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+      <Link href={`/blog/${blogPost.id}`}  scroll={false}>
         {blogPost.title}
-      </h2>
+      </Link>
+    </h2>
       <p className="text-gray-600 text-sm mb-4">
-        {blogPost.description.length > 100
-          ? `${blogPost.description.substring(0, 100)}...`
-          : blogPost.description}
+        {blogPost.content.length > 1000
+          ? `${blogPost.content.substring(0, 1000)}...`
+          : blogPost.content}
       </p>
       <div className="text-gray-500 text-xs mb-2">
         Created by: <span className="font-medium">{blogPost.createdBy}</span>
