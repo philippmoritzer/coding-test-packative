@@ -35,7 +35,7 @@ function BlogPageContent({ page, setPage }: { page: number; setPage: (p: number)
       />
       <div className="space-y-6">
         {blogPosts.map((post: BlogPost) => (
-          <BlogPostCard key={post.id} blogPost={post} />
+          <BlogPostCard key={post.id} blogPost={post} shortenContent={true}/>
         ))}
       </div>
       <PaginationNav
