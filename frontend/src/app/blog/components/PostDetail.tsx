@@ -1,15 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
-import axiosBlogInstance from "../util/axios-blog.interceptor";
 import BlogPostCard from "./BlogPostCard";
-import { BlogPost } from "../types/blogPost.type";
+import { useBlogPost } from "@/app/blog/hooks/useBlogPost";
 
 export default function PostDetail({ id, modal }: { id: string; modal?: boolean }) {
-  const [post, setPost] = useState<BlogPost | null>(null);
-
-  useEffect(() => {
-    axiosBlogInstance.get(`/posts/${id}`).then(res => setPost(res.data));
-  }, [id]);
+  const post = useBlogPost(id);
 
   if (!post) return <div>Loading...</div>;
 
