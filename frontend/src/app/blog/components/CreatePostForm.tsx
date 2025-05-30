@@ -11,8 +11,8 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ onPostCreated }) => {
    const {
     title,
     setTitle,
-    description,
-    setContent: setDescription,
+    content,
+    setContent,
     isLoading,
     error,
     handleSubmit,
@@ -29,6 +29,7 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ onPostCreated }) => {
         <input
           type="text"
           id="title"
+          name="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-black"
@@ -37,15 +38,16 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ onPostCreated }) => {
         />
       </div>
       <div className="mb-4">
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-          Description
+        <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+          Content
         </label>
         <textarea
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          id="content"
+          name="content"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
           className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-black"
-          placeholder="Enter the description"
+          placeholder="Enter the content"
           rows={4}
           required
         ></textarea>

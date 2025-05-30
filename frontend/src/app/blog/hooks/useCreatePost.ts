@@ -32,7 +32,7 @@ export function useCreatePost(onPostCreated: (newPost: BlogPost) => void) {
   return {
     title,
     setTitle,
-    description: content,
+    content,
     setContent,
     isLoading,
     error,
