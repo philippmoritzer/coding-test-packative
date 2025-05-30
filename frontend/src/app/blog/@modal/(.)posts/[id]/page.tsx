@@ -3,8 +3,10 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import Modal from "react-modal";
 import PostDetail from "@/app/blog/components/PostDetail";
+import { use } from 'react'
 
-export default function PostDetailModal({ params }: { params: { id: string } }) {
+export default function PostDetailModal({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const router = useRouter();
 
   return (
@@ -46,7 +48,7 @@ export default function PostDetailModal({ params }: { params: { id: string } }) 
         >
           <span className="text-2xl leading-none">&times;</span>
         </button>
-        <PostDetail id={params.id} modal />
+        <PostDetail id={id} modal />
       </div>
     </Modal>
   );

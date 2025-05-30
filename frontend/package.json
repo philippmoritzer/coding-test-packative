@@ -24,9 +24,7 @@
     "react-modal": "^3.16.3",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.6.0",
-    "redux-persist": "^6.0.0",
-    "sqlite3": "^5.1.7",
-    "typeorm": "^0.3.24"
+    "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

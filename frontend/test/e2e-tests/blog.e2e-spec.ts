@@ -2,12 +2,14 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Blog E2E", () => {
   test("login, create a blog post and see if it appears", async ({ page }) => {
-    //TODO: load from env
-    await page.goto("http://localhost:3000/login");
+    const USERNAME = process.env.E2E_USERNAME || "admin";
+    const PASSWORD = process.env.E2E_PASSWORD || "admin";
+    const BASEURL = process.env.E2E_BASE_URL || "http://localhost:3000";
 
-    //TODO: load from env
-    await page.fill('input[id="username"]', "admin");
-    await page.fill('input[id="password"]', "admin");
+    await page.goto(`${BASEURL}/login`);
+
+    await page.fill('input[id="username"]', USERNAME);
+    await page.fill('input[id="password"]', PASSWORD);
     await page.click('button[type="submit"]');
 
     await page.waitForURL("**/blog");

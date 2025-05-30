@@ -54,7 +54,7 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ onPostCreated }) => {
       </div>
       <button
         type="submit"
-        className={`w-full bg-blue-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-600 transition duration-300 ${
+        className={`w-full bg-blue-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-600 transition duration-300 cursor-pointer${
           isLoading ? "opacity-50 cursor-not-allowed" : ""
         }`}
         disabled={isLoading}

@@ -28,7 +28,7 @@ function PaginationNav({
   return (
     <nav className="flex justify-center my-6 gap-2 items-center">
       <button
-        className="px-3 py-1 rounded bg-blue-100 text-blue-700 disabled:opacity-50"
+        className="px-3 py-1 rounded bg-blue-100 text-blue-700 disabled:opacity-50 cursor-pointer"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
       >
@@ -42,14 +42,14 @@ function PaginationNav({
             pageNum === currentPage
               ? "bg-blue-600 text-white font-bold"
               : "bg-blue-50 text-blue-700 hover:bg-blue-200"
-          }`}
+          } cursor-pointer`}
           disabled={pageNum === currentPage}
         >
           {pageNum}
         </button>
       ))}
       <button
-        className="px-3 py-1 rounded bg-blue-100 text-blue-700 disabled:opacity-50"
+        className="px-3 py-1 rounded bg-blue-100 text-blue-700 disabled:opacity-50 cursor-pointer"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= totalPages}
       >

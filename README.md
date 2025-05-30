@@ -20,6 +20,8 @@ software but also to learn react.
 
 ## Running the project
 
+For local development, rename ./frontend/.env.tpl to .env
+
 ```bash
 #Backend
 cd ./backend
@@ -41,7 +43,7 @@ Two user accounts are hardcoded for testing:
 
 ## Running with docker
 
-Might need to change requests paths to docker internal DNS
+Rename ./frontend/.env.tpl to .env and run:
 
 ```bash
     $ docker compose build && docker compose up
