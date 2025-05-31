@@ -23,7 +23,7 @@ jobs:
 
   audit_lint_prettier:
     runs-on: ubuntu-latest
-    needs: setup
+    needs: auth
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
