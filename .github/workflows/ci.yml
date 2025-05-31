@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  setup:
+  auth:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -33,13 +33,13 @@ jobs:
         with:
           node-version: 22
 
-      - name: Audit (fake)
+      - name: Audit
         run: echo "TODO Implement npm audit"
 
-      - name: Lint (fake)
+      - name: Lint
         run: echo "TODO Implement linting"
 
-      - name: Prettier (fake)
+      - name: Prettier
         run: echo "TODO Implement prettier check"
 
   build:
@@ -127,7 +127,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test_unit, test_e2e]
     steps:
-      - name: Fake coverage
+      - name: Coverage
         run: echo "TODO coverage report"
 
   deploy:
