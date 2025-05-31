@@ -120,8 +120,43 @@ jobs:
       - name: Backend e2e tests
         run: cd backend && npm run test:e2e
 
+      - name: Start backend
+        run: |
+          cd backend
+          npm run build
+          nohup npm run start &
+
+      - name: Start frontend
+        run: |
+          cd frontend
+          npm run build
+          nohup npm run start &
+
+      - name: Wait for backend to be ready
+        run: |
+          n=0
+          until [ $n -ge 20 ]
+          do
+            nc -z localhost 3001 && break
+            n=$((n+1))
+            sleep 2
+          done
+
+      - name: Wait for frontend to be ready
+        run: |
+          n=0
+          until [ $n -ge 20 ]
+          do
+            nc -z localhost 3000 && break
+            n=$((n+1))
+            sleep 2
+          done
+
       - name: Frontend e2e tests
-        run: cd frontend && npx playwright install --with-deps && npm run test:e2e
+        run: |
+          cd frontend
+          npx playwright install --with-deps
+          npm run test:e2e
 
   coverage:
     runs-on: ubuntu-latest
