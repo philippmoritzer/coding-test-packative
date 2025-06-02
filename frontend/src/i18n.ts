@@ -15,6 +15,9 @@ i18n.use(initReactI18next).init({
     de: {
       translation: require("../public/locales/de/translations.json"),
     },
+    kr: {
+      translation: require("../public/locales/kr/translations.json"),
+    },
   },
   interpolation: {
     escapeValue: false,

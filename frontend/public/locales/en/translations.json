@@ -5,5 +5,12 @@
     "forbidden": "Access forbidden.",
     "notFound": "Not found.",
     "server": "Server error."
+  },
+  "blog": {
+    "title": "Blog Posts",
+    "create": "Create a new post"
+  },
+  "auth": {
+    "currentUser": "Current User"
   }
 }

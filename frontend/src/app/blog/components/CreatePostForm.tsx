@@ -1,7 +1,7 @@
 import React from "react";
 import { BlogPost } from "../types/blogPost.type";
 import { useCreatePost } from "../hooks/useCreatePost";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 interface CreatePostFormProps {
   onPostCreated: (newPost: BlogPost) => void; }
@@ -20,7 +20,7 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ onPostCreated }) => {
 
   return (
     <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg mb-6">
-      <h2 className="text-2xl font-bold text-gray-800 mb-4">Create a New Post</h2>
+      <h2 className="text-2xl font-bold text-gray-800 mb-4"><Trans>blog.create</Trans></h2>
       {error && <p className="text-red-500 text-sm mb-4">{t(error)}</p>}
       <div className="mb-4">
         <label htmlFor="title" className="block text-sm font-medium text-gray-700">

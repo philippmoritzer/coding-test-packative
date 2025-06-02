@@ -9,10 +9,13 @@ import { BlogPost } from "./types/blogPost.type";
 import PaginationNav from "./components/PaginationNav";
 import withAuth from "@/shared/components/withAuth";
 import '@/i18n'
+import { Trans, useTranslation } from "react-i18next";
 
 const PAGE_SIZE = 10;
 
 function BlogPageContent({ page, setPage }: { page: number; setPage: (p: number) => void }) {
+  useTranslation();
+
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [total, setTotal] = useState(0);
 
@@ -26,7 +29,11 @@ function BlogPageContent({ page, setPage }: { page: number; setPage: (p: number)
   };
 
   return (
+    
     <div className="container mx-auto px-4">
+      <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">
+            <Trans>blog.title</Trans>
+      </h1>
       <CreatePostForm onPostCreated={handlePostCreated} />
       <PaginationNav
         currentPage={page}

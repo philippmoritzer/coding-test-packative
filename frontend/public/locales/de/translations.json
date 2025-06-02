@@ -5,5 +5,12 @@
     "forbidden": "Zugriff verweigert.",
     "notFound": "Nicht gefunden.",
     "server": "Serverfehler."
+  },
+  "blog": {    
+    "title": "Blogbeiträge",
+    "create": "Neuen Beitrag erstellen"    
+  },
+  "auth": {
+    "currentUser": "Aktueller Benutzer"
   }
 }
